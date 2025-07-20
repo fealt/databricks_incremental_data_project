@@ -1,0 +1,37 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table fact_bookings {
+  booking_id VARCHAR(50) [pk]
+  passenger_id VARCHAR(50) [not null]
+  flight_id VARCHAR(50) [not null]
+  airport_id VARCHAR(50) [not null]
+  amount DECIMAL(10, 2)
+  booking_date DATE
+}
+
+Table dim_passengers {
+  passenger_id VARCHAR(50) [pk]
+  name VARCHAR(100)
+  gender VARCHAR(10)
+  nationality VARCHAR(50)
+}
+
+Table dim_flights {
+  flight_id VARCHAR(50) [pk]
+  airline VARCHAR(100)
+  origin VARCHAR(100)
+  destination VARCHAR(100)
+  flight_date DATE
+}
+
+Table dim_airports {
+  airport_id VARCHAR(50) [pk]
+  airport_name VARCHAR(100)
+  city VARCHAR(50)
+  country VARCHAR(50)
+}
+
+Ref: fact_bookings.passenger_id > dim_passengers.passenger_id
+Ref: fact_bookings.flight_id > dim_flights.flight_id
+Ref: fact_bookings.airport_id > dim_airports.airport_id
