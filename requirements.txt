@@ -1,1 +1,3 @@
 streamlit==1.47.0
+dlt
+pyspark
