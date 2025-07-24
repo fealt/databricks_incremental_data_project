@@ -6,7 +6,7 @@
 
 ### Motivation
 
-By pure chance, I stumbled upon Ansh Lamba’s post on my [LinkedIn](https://www.linkedin.com/in/felipealtermann/) feed and was instantly inspired by his clear, hands-on approach to data engineering, showcased through a project using an aviation dataset. Aviation is a subject I absolutely love and have previously explored in depth during my [Ironhack bootcamp capstone project](https://github.com/fealt/brazilian-regional-airports).
+By pure chance, I stumbled upon _Ansh Lamba’s_ post on my [LinkedIn](https://www.linkedin.com/in/felipealtermann/) feed and was instantly inspired by his clear, hands-on approach to data engineering, showcased through a project using an aviation dataset. Aviation is a subject I absolutely love and have previously explored in depth during my [Ironhack bootcamp capstone project](https://github.com/fealt/brazilian-regional-airports).
 <br>
 <br>
 The project aligns perfectly with my recent [Databricks Data Analyst Associate](https://credentials.databricks.com/15fed725-6c33-4c2e-9fd7-3f6ee6de619c#acc.qTEn0NwC) and [Databricks Data Engineer Associate](https://credentials.databricks.com/1bcec640-d206-4ee4-af3c-7728d49b05e4#acc.uhCbapWe) certifications, aiming to provide a comprehensive understanding of modern data engineering practices within the Databricks ecosystem.
@@ -22,7 +22,7 @@ The project aligns perfectly with my recent [Databricks Data Analyst Associate](
 
 <br>
 
-### My love and thanks to:
+## My thanks to
 
 ♡ **[Ansh Lamba](https://github.com/anshlambagit)** – for sharing incredible hands-on tutorials and making complex Data Engineering concepts feel simple (and _fun!_)
 <br>
@@ -34,7 +34,8 @@ The project aligns perfectly with my recent [Databricks Data Analyst Associate](
 
 <br>
 
-Stack:
+## Tech Stack
+
 - SQL
 - Python
 - Apache Spark
@@ -42,29 +43,35 @@ Stack:
 - Databricks
   - Auto Loader
   - Lakeflow Declarative Pipelines
-  - Unity Catalog volumes
+  - Unity Catalog Volumes
 
 <br>
 
-Key Learning Outcomes:
-- Mastering Databricks
+## Key Learning Outcomes
+
+- Designing a dimensional data model (star schema)
 - Implementing Medallion Architecture
 - Incremental data ingestion with Spark Streaming and Databricks Auto Loader
 - Parameter parsing and control flow in Databricks jobs
 - Building declarative pipelines with Lakeflow
-- Designing and implementing a dimensional data model (star schema)
 - Creating automated Slowly Changing Dimensions (SCD) builders and fact builders
 
 <br>
 
-- [Medallion Architecture Implementation](#medallion-architecture)
-- [Dataset](#dataset)
-- [Setup](#setup)
-- [Incremental Data Ingestion with PySpark Streaming and Auto Loader](#incremental-data-injestion)
-- [Parameter Parsing and Control Flow in Databricks Jobs](#databricks-job)
-- [Lakeflow Declarative Pipelines](#lakeflow-declarative-pipelines)
-- [Orchestrating Databricks Delta Live Tables Pipelines](#dlt-pipeline)
+## Table of Contents
 
+- [Medallion Architecture Implementation](#medallion-architecture)
+- [The Dataset](#dataset)
+- [The Setup](#setup)
+- [1. From Raw to Bronze Layer](#from-raw-to-bronze)
+  - [Incremental Data Ingestion with PySpark Streaming and Auto Loader](#incremental-data-injestion)
+  - [Parameter Parsing and Control Flow in Databricks Jobs](#databricks-job)
+- [2. From Bronze do Silver Layer](#from-bronze-to-silver)
+  - [Lakeflow Declarative Pipelines](#lakeflow-declarative-pipelines)
+  - [Orchestrating Databricks Delta Live Tables Pipelines](#dlt-pipeline)
+- [3. From Silver to Gold Layer]("from-silver-to-gold")
+
+<br>
 <br>
 
 <a name="medallion-architecture"></a>
@@ -92,7 +99,7 @@ The project is structured around the Medallion Architecture, which consists of t
 
 <a name="dataset"></a>
 
-## Dataset
+## The Dataset
 
 The source data for the project is indeed made available by Ansh Lamba in [this repository](https://github.com/anshlambagit/AnshLambaYoutube/tree/main/Databricks%20End%20To%20End%20Project) on GitHub.
 
@@ -108,7 +115,7 @@ The dataset is structured around a **central fact table and three dimension tabl
 
 <a name="setup"></a>
 
-## Setup
+## The Setup
 
 - create your databricks free edition account
 
@@ -130,13 +137,21 @@ CREATE VOLUME flights.silver.silver_volume;
 CREATE VOLUME flights.gold.gold_volume;
 ```
 
+<br>
+
+<a name="from-raw-to-bronze"></a>
+
+## 1. From Raw to Bronze Layer
+
 <a name="incremental-data-injestion"></a>
 
-## Incremental Data Ingestion with Spark Streaming and Auto Loader
+### Incremental Data Ingestion with Spark Streaming and Auto Loader
 
 **Databricks Auto Loader** _"incrementally and efficiently processes new data files as they arrive in cloud storage. It provides a Structured Streaming source called `cloudFiles`. Given an input directory path on the cloud file storage, the `cloudFiles` source automatically processes new files as they arrive, with the option of also processing existing files in that directory. Auto Loader has support for both Python and SQL in Lakeflow Declarative Pipelines."_ [Source: Databricks](https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/)
 
-Code example from the [Bronze Incremental Data Ingestion notebook](notebooks/02_Bronze_Layer.ipynb):
+<br>
+
+Code example from the [Bronze Incremental Data Ingestion](notebooks/02_Bronze_Layer.ipynb) notebook:
 
 <br>
 
@@ -168,13 +183,19 @@ df.writeStream.format("delta")\
 
 <br>
 
+- Bronze Layer Volumnes `airports`, `flights`, `passengers`, and `bookings`:
+
+![img](/docs/images/01_bronze_layer_tables.png)
+
+<br>
+
 ### Idempotency Guaranteed
 
 Another crucial aspect of Databricks Autoloader _"is its ability to provide exact-once processing semantics for ingested files. As new files are discovered in the monitored cloud storage location, their metadata is durably persisted in a cloud-based checkpoint location using a scalable key-value store (Apache RocksDB). (...) This fault tolerance and exactly-once processing semantics are achieved natively by Autoloader, without requiring any manual state management or custom code, simplifying the development and maintenance of reliable and idempotent data ingestion pipelines."_ [Source: Chaos Genius](https://www.chaosgenius.io/blog/databricks-autoloader/)
 
 Here is an example where you can find the `rocksDB` folder in this project:
 
-![img](/docs/images/01_rocksDB.png)
+![img](/docs/images/02_rocksDB.png)
 
 <br>
 
@@ -202,7 +223,7 @@ Repeat the pattern for the other datasets by adding:
 
 <a name="databricks-job"></a>
 
-## Parameter Parsing and Control Flow in Databricks Jobs
+### Parameter Parsing and Control Flow in Databricks Jobs
 
 The full code is in the [Source Parameters](notebooks/03_Src_Parameters.ipynb) notebook.
 
@@ -233,10 +254,6 @@ The Python job configuration file is available [at this link](jobs/bronze_ingest
 
 <br>
 
-![img](/docs/images/02_databricks_job_parametrization.png)
-
-<br>
-
 ![img](/docs/images/03_databricks_job_parametrization.png)
 
 <br>
@@ -247,13 +264,17 @@ The Python job configuration file is available [at this link](jobs/bronze_ingest
 
 <br>
 
+<a name="from-bronze-to-silver"></a>
+
+## 2. From Bronze do Silver Layer
+
+<br>
+
 <a name="lakeflow-declarative-pipelines"></a>
 
-## Lakeflow Declarative Pipelines
+### Lakeflow Declarative Pipelines
 
 - Silver Layer Pipeline
-
-The full code is in the [Silver Layer](notebooks/04_Silver_Layer.ipynb) notebook.
 
 - Define Bronze-to-Silver Table stage_bookings
   - This Delta Live Table (DLT) loads streaming data from the bookings folder in the Bronze layer
@@ -285,6 +306,15 @@ def transformations_bookings():
     return df
 ```
 
+- Next, navigate to the `Jobs and Pipelines` menu to create a new Pipeline:
+
+The code was developed in the [Silver Layer](notebooks/04_Silver_Layer.ipynb) notebook and copied to the [Silver Transformation](pipelines/silver_transformation.py) python file.
+
+![img](/docs/images/05_bookings_silver_pipeline.png)
+
+![img](/docs/images/06_silver_tables.png)
+
+
 <br>
 
 <a name="dlt-pipeline"></a>
@@ -297,6 +327,13 @@ def transformations_bookings():
 
 
 
+
+
+<br>
+
+<a name="from-silver-to-gold"></a>
+
+## 3. From Silver to Gold Layer
 
 
 
