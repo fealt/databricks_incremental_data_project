@@ -69,7 +69,7 @@ The project aligns perfectly with my recent [Databricks Data Analyst Associate](
 - [2. From Bronze do Silver Layer](#from-bronze-to-silver)
   - [Lakeflow Declarative Pipelines](#lakeflow-declarative-pipelines)
   - [Orchestrating Databricks Delta Live Tables (DLT) Pipeline for Silver tables](#dlt-pipeline)
-- [3. From Silver to Gold Layer]("#from-silver-to-gold")
+- [3. From Silver to Gold Layer](#from-silver-to-gold)
   - [Dimension Tables](#dimension-tables)
     - [Parameters – Flights Dimension](#parameters)
     - [Last Load Date Logic – Support for Incremental & Backdated Refresh](#last-load-logic)
@@ -81,7 +81,7 @@ The project aligns perfectly with my recent [Databricks Data Analyst Associate](
   - [Fact Table](#fact-table)
     - [Function to Build Dynamic Fact Query](#function-fact-table)
     - [Upsert](#upsert-fact-table)
-- [4. Stakeholder's Flight KPI Dashboard]("#kpi-dashboard")
+- [4. Stakeholder's Flight KPI Dashboard](#kpi-dashboard)
 
 
 <br>
