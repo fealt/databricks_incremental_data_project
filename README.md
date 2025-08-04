@@ -2,7 +2,7 @@
 
 <br>
 
-## Databricks Incremental Data Injestion Project
+## Databricks Incremental Data Ingestion Project
 
 ### Motivation
 
@@ -64,7 +64,7 @@ The project aligns perfectly with my recent [Databricks Data Analyst Associate](
 - [The Dataset](#dataset)
 - [The Setup](#setup)
 - [1. From Raw to Bronze Layer](#from-raw-to-bronze)
-  - [Incremental Data Ingestion with PySpark Streaming and Auto Loader](#incremental-data-injestion)
+  - [Incremental Data Ingestion with PySpark Streaming and Auto Loader](#incremental-data-ingestion)
   - [Parameter Parsing and Control Flow in Databricks Jobs](#databricks-job)
 - [2. From Bronze do Silver Layer](#from-bronze-to-silver)
   - [Lakeflow Declarative Pipelines](#lakeflow-declarative-pipelines)
@@ -165,7 +165,7 @@ CREATE VOLUME flights.gold.gold_volume;
 
 ## 1. From Raw to Bronze Layer
 
-<a name="incremental-data-injestion"></a>
+<a name="incremental-data-ingestion"></a>
 
 ### Incremental Data Ingestion with Spark Streaming and Auto Loader
 
